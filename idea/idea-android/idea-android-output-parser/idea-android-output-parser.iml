@@ -11,5 +11,6 @@
     <orderEntry type="library" exported="" name="android-plugin" level="project" />
     <orderEntry type="module" module-name="util" />
     <orderEntry type="library" name="intellij-core" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="idea-full" level="project" />
   </component>
 </module>
