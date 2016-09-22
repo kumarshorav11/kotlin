@@ -18,8 +18,6 @@ package org.jetbrains.kotlin.cli.jvm.compiler
 
 import com.google.common.collect.Sets
 import com.intellij.codeInsight.ContainerProvider
-import com.intellij.codeInsight.ExternalAnnotationsManager
-import com.intellij.codeInsight.InferredAnnotationsManager
 import com.intellij.codeInsight.runner.JavaMainMethodProvider
 import com.intellij.core.CoreApplicationEnvironment
 import com.intellij.core.CoreJavaFileManager
@@ -47,7 +45,6 @@ import com.intellij.openapi.vfs.impl.ZipHandler
 import com.intellij.psi.FileContextProvider
 import com.intellij.psi.PsiElementFinder
 import com.intellij.psi.augment.PsiAugmentProvider
-import com.intellij.psi.augment.TypeAnnotationModifier
 import com.intellij.psi.compiled.ClassFileDecompilers
 import com.intellij.psi.impl.JavaClassSupersImpl
 import com.intellij.psi.impl.PsiElementFinderImpl
@@ -97,7 +94,6 @@ import org.jetbrains.kotlin.script.*
 import org.jetbrains.kotlin.utils.PathUtil
 import org.jetbrains.kotlin.utils.ifEmpty
 import java.io.File
-import java.lang.IllegalStateException
 import java.util.*
 
 class KotlinCoreEnvironment private constructor(
@@ -303,9 +299,6 @@ class KotlinCoreEnvironment private constructor(
     }
 
     companion object {
-        init {
-            System.getProperties().setProperty("idea.plugins.compatible.build", "162.9999")
-        }
 
         private val APPLICATION_LOCK = Object()
         private var ourApplicationEnvironment: JavaCoreApplicationEnvironment? = null
@@ -403,8 +396,6 @@ class KotlinCoreEnvironment private constructor(
             CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), ContainerProvider.EP_NAME, ContainerProvider::class.java)
             CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), ClsCustomNavigationPolicy.EP_NAME, ClsCustomNavigationPolicy::class.java)
             CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), ClassFileDecompilers.EP_NAME, ClassFileDecompilers.Decompiler::class.java)
-            //
-            CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), TypeAnnotationModifier.EP_NAME, TypeAnnotationModifier::class.java)
         }
 
         private fun registerApplicationExtensionPointsAndExtensionsFrom(configuration: CompilerConfiguration, configFilePath: String) {
@@ -466,9 +457,6 @@ class KotlinCoreEnvironment private constructor(
                 registerService(LightClassGenerationSupport::class.java, cliLightClassGenerationSupport)
                 registerService(CliLightClassGenerationSupport::class.java, cliLightClassGenerationSupport)
                 registerService(CodeAnalyzerInitializer::class.java, cliLightClassGenerationSupport)
-
-                registerService(ExternalAnnotationsManager::class.java, MockExternalAnnotationsManager())
-                registerService(InferredAnnotationsManager::class.java, MockInferredAnnotationsManager())
 
                 val area = Extensions.getArea(this)
 

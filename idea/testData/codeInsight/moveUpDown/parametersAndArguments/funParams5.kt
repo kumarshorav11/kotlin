@@ -1,7 +1,9 @@
 // MOVE: down
 // IS_APPLICABLE: false
 class A {
-    fun <T, U, W> foo(
+    fun foo<T,
+            U,
+            W>(
             b: Int,
             c: Int
             <caret>a: Int,

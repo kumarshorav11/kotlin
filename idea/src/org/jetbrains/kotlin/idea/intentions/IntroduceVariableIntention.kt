@@ -56,8 +56,6 @@ class IntroduceVariableIntention : SelfTargetingRangeIntention<PsiElement>(
 
     override fun applyTo(element: PsiElement, editor: Editor?) {
         val expression = getExpressionToProcess(element) ?: return
-        KotlinIntroduceVariableHandler.doRefactoring(
-                element.project, editor, expression, isVar = false, occurrencesToReplace = null, onNonInteractiveFinish = null
-        )
+        KotlinIntroduceVariableHandler.doRefactoring(element.project, editor, expression, null, null)
     }
 }

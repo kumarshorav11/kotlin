@@ -99,8 +99,8 @@ fun KtIfExpression.introduceValueForCondition(occurrenceInThenClause: KtExpressi
     KotlinIntroduceVariableHandler.doRefactoring(project,
                                                  editor,
                                                  occurrenceInConditional,
-                                                 false,
-                                                 listOf(occurrenceInConditional, occurrenceInThenClause), null)
+                                                 listOf(occurrenceInConditional, occurrenceInThenClause),
+                                                 null)
 }
 
 fun KtNameReferenceExpression.inlineIfDeclaredLocallyAndOnlyUsedOnceWithPrompt(editor: Editor?) {

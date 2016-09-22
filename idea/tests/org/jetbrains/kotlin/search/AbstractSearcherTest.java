@@ -25,8 +25,6 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 import com.intellij.util.Query;
-import kotlin.collections.CollectionsKt;
-import kotlin.jvm.functions.Function1;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.idea.test.KotlinLightProjectDescriptor;
 import org.jetbrains.kotlin.idea.test.TestUtilsKt;
@@ -60,35 +58,13 @@ public abstract class AbstractSearcherTest extends LightCodeInsightFixtureTestCa
     }
 
     protected void checkResult(Query<?> actual) throws IOException {
-        String text = FileUtil.loadFile(new File(getPathToFile()), true);
-
-        List<String> classFqnFilters = InTextDirectivesUtils.findListWithPrefixes(text, "// IGNORE_CLASSES: ");
-
+        List<String> expected = InTextDirectivesUtils.findListWithPrefixes(FileUtil.loadFile(new File(getPathToFile()), true), "// SEARCH: ");
         List<String> actualModified = new ArrayList<String>();
         for (Object member : actual) {
-            if (member instanceof PsiClass) {
-                final String qualifiedName = ((PsiClass) member).getQualifiedName();
-                assert qualifiedName != null;
-
-                boolean filterOut = CollectionsKt.any(classFqnFilters, new Function1<String, Boolean>() {
-                    @Override
-                    public Boolean invoke(String s) {
-                        return qualifiedName.startsWith(s);
-                    }
-                });
-
-                if (filterOut) {
-                    continue;
-                }
-            }
-
             actualModified.add(stringRepresentation(member));
         }
-        Collections.sort(actualModified);
-
-        List<String> expected = InTextDirectivesUtils.findListWithPrefixes(text, "// SEARCH: ");
         Collections.sort(expected);
-
+        Collections.sort(actualModified);
         assertOrderedEquals(actualModified, expected);
     }
 
