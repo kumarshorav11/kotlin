@@ -120,7 +120,7 @@ class GeneratePrimitives(out: PrintWriter) : BuiltInsSourceGenerator(out) {
             generateUnaryOperators(kind)
             generateRangeTo(kind)
 
-            if (kind == PrimitiveType.INT || kind == PrimitiveType.LONG) {
+            if (kind == PrimitiveType.INT || kind == PrimitiveType.LONG || kind == PrimitiveType.BYTE || kind == PrimitiveType.SHORT) {
                 generateBitwiseOperators(className)
             }
 
