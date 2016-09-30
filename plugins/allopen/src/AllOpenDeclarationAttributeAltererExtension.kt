@@ -63,11 +63,7 @@ class AllOpenDeclarationAttributeAltererExtension(val allOpenAnnotationFqNames: 
         if (this is ClassDescriptor) {
             for (superType in TypeUtils.getAllSupertypes(defaultType)) {
                 val superTypeDescriptor = superType.constructor.declarationDescriptor as? ClassDescriptor ?: continue
-
-                // @Inherited works only for classes, not for interfaces
-                if (superTypeDescriptor.kind == ClassKind.CLASS) {
-                    if (superTypeDescriptor.annotations.any { it.isAllOpenAnnotation() }) return true
-                }
+                if (superTypeDescriptor.annotations.any { it.isAllOpenAnnotation() }) return true
             }
         }
 
