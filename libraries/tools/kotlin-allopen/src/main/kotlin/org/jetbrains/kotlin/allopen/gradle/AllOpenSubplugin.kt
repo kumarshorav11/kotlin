@@ -18,6 +18,8 @@ package org.jetbrains.kotlin.allopen.gradle
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.internal.AbstractTask
+import org.gradle.api.internal.ConventionTask
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.compile.AbstractCompile
 import org.jetbrains.kotlin.gradle.plugin.KotlinGradleSubplugin
@@ -33,7 +35,18 @@ class AllOpenGradleSubplugin : Plugin<Project> {
     }
 
     override fun apply(project: Project) {
-        project.extensions.create("allOpen", AllOpenExtension::class.java)
+        val allOpenExtension = project.extensions.create("allOpen", AllOpenExtension::class.java)
+
+        project.afterEvaluate {
+            val fqNamesAsString = allOpenExtension.myAnnotations.joinToString(",")
+            project.extensions.extraProperties.set("kotlinAllOpenAnnotations", fqNamesAsString)
+
+            open class TaskForAllOpen : AbstractTask()
+            project.tasks.add(project.tasks.create("allOpenDataStorageTask", TaskForAllOpen::class.java).apply {
+                isEnabled = false
+                description = "Supported all-open annotations: " + fqNamesAsString
+            })
+        }
     }
 }
 

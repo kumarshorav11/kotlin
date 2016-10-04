@@ -27,6 +27,6 @@ abstract class AbstractBytecodeListingTestForAllOpen : AbstractBytecodeListingTe
 
     override fun setUpEnvironment(environment: KotlinCoreEnvironment) {
         DeclarationAttributeAltererExtension.registerExtension(
-                environment.project, AllOpenDeclarationAttributeAltererExtension(ALLOPEN_ANNOTATIONS))
+                environment.project, CliAllOpenDeclarationAttributeAltererExtension(ALLOPEN_ANNOTATIONS))
     }
 }

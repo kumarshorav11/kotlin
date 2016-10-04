@@ -54,6 +54,6 @@ class AllOpenComponentRegistrar : ComponentRegistrar {
         val annotations = configuration.get(AllOpenConfigurationKeys.ANNOTATION) ?: return
         if (annotations.isEmpty()) return
 
-        DeclarationAttributeAltererExtension.registerExtension(project, AllOpenDeclarationAttributeAltererExtension(annotations))
+        DeclarationAttributeAltererExtension.registerExtension(project, CliAllOpenDeclarationAttributeAltererExtension(annotations))
     }
 }

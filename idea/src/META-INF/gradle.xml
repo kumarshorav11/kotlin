@@ -27,4 +27,8 @@
             hasStaticDescription="true"
             level="WARNING"/>
     </extensions>
+
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <declarationAttributeAltererExtension implementation="org.jetbrains.kotlin.allopen.IdeAllOpenDeclarationAttributeAltererExtension"/>
+    </extensions>
 </idea-plugin>
