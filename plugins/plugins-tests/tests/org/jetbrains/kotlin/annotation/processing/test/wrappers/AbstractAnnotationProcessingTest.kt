@@ -20,6 +20,7 @@ import com.intellij.openapi.util.io.FileUtil
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.search.GlobalSearchScope
 import org.jetbrains.kotlin.codegen.AbstractBytecodeTextTest
+import org.jetbrains.kotlin.codegen.CodegenTestCase
 import org.jetbrains.kotlin.codegen.CodegenTestUtil
 import org.jetbrains.kotlin.java.model.elements.DefaultJeElementRenderer
 import org.jetbrains.kotlin.java.model.toJeElement
@@ -35,7 +36,7 @@ abstract class AbstractAnnotationProcessingTest : AbstractBytecodeTextTest() {
         private val RENDERER = DefaultJeElementRenderer()
     }
 
-    override fun doMultiFileTest(wholeFile: File, files: MutableList<TestFile>, javaFilesDir: File?) {
+    override fun doMultiFileTest(wholeFile: File, files: List<CodegenTestCase.TestFile>, javaFilesDir: File?) {
         createEnvironmentWithMockJdkAndIdeaAnnotations(ConfigurationKind.ALL, files, javaFilesDir)
         loadMultiFiles(files)
 
