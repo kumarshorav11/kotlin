@@ -9,5 +9,10 @@ class Test2 {
     val prop1: String = ""
 
     final fun method2() {}
-    val prop2: String = ""
+    final val prop2: String = ""
+    final var prop3: String = ""
+
+    // Modifier 'final' is not applicable to 'setter'
+    // var prop4: String = ""
+    //     final set
 }
