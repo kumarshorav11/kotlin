@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package org.jetbrains.kotlin.allopen
+package org.jetbrains.kotlin.noarg.ide
 
 import com.intellij.openapi.components.ServiceManager
+import org.jetbrains.kotlin.allopen.GradleModelPerModuleCache
+import org.jetbrains.kotlin.noarg.AbstractNoArgDeclarationChecker
 import org.jetbrains.kotlin.psi.KtModifierListOwner
 
-class IdeAllOpenDeclarationAttributeAltererExtension : AbstractAllOpenDeclarationAttributeAltererExtension() {
+class IdeNoArgDeclarationChecker : AbstractNoArgDeclarationChecker() {
     override fun getAnnotationFqNames(modifierListOwner: KtModifierListOwner): List<String> {
         val gradleModelCache = ServiceManager.getService(
                 modifierListOwner.project, GradleModelPerModuleCache::class.java) ?: return emptyList()
-        return gradleModelCache.getAnnotationFqNames(modifierListOwner, "allOpenDataStorageTask")
+        return gradleModelCache.getAnnotationFqNames(modifierListOwner, "noArgDataStorageTask")
     }
 }

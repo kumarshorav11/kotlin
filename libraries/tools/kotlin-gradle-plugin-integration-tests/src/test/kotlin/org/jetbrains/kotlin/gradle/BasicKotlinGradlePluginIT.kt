@@ -147,6 +147,14 @@ class SimpleKotlinGradleIT : BaseGradleIT() {
 
     @Test
     fun testKotlinJpaPlugin() {
+        Project("noArgJpa", GRADLE_VERSION).build("build") {
+            assertSuccessful()
 
+            val classesDir = File(project.projectDir, "build/classes/main")
+            val testClass = File(classesDir, "test/Test.class")
+            assertTrue(testClass.exists())
+
+            checkBytecodeContains(testClass, "public <init>()V")
+        }
     }
 }

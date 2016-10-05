@@ -41,8 +41,8 @@ class NoArgGradleSubplugin : Plugin<Project> {
             val fqNamesAsString = noArgExtension.myAnnotations.joinToString(",")
             project.extensions.extraProperties.set("kotlinNoArgAnnotations", fqNamesAsString)
 
-            open class TaskForAllOpen : AbstractTask()
-            project.tasks.add(project.tasks.create("noArgDataStorageTask", TaskForAllOpen::class.java).apply {
+            open class TaskForNoArg : AbstractTask()
+            project.tasks.add(project.tasks.create("noArgDataStorageTask", TaskForNoArg::class.java).apply {
                 isEnabled = false
                 description = "Supported no-arg annotations: " + fqNamesAsString
             })
@@ -55,7 +55,7 @@ class NoArgKotlinGradleSubplugin : KotlinGradleSubplugin<AbstractCompile> {
         val ANNOTATIONS_ARG_NAME = "annotations"
     }
 
-    override fun isApplicable(project: Project, task: AbstractCompile) = AllOpenGradleSubplugin.isEnabled(project)
+    override fun isApplicable(project: Project, task: AbstractCompile) = NoArgGradleSubplugin.isEnabled(project)
 
     override fun apply(
             project: Project,
@@ -66,11 +66,11 @@ class NoArgKotlinGradleSubplugin : KotlinGradleSubplugin<AbstractCompile> {
     ): List<SubpluginOption> {
         if (!NoArgGradleSubplugin.isEnabled(project)) return emptyList()
 
-        val allOpenExtension = project.extensions.findByType(AllOpenExtension::class.java) ?: return emptyList()
+        val noArgExtension = project.extensions.findByType(NoArgExtension::class.java) ?: return emptyList()
 
         val options = mutableListOf<SubpluginOption>()
 
-        for (anno in allOpenExtension.myAnnotations) {
+        for (anno in noArgExtension.myAnnotations) {
             options += SubpluginOption(ANNOTATIONS_ARG_NAME, anno)
         }
 

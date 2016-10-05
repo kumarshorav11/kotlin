@@ -26,9 +26,15 @@
             language="Groovy"
             hasStaticDescription="true"
             level="WARNING"/>
+
+        <projectService serviceInterface="org.jetbrains.kotlin.allopen.GradleModelPerModuleCache"
+                        serviceImplementation="org.jetbrains.kotlin.allopen.GradleModelPerModuleCache"/>
     </extensions>
 
     <extensions defaultExtensionNs="org.jetbrains.kotlin">
         <declarationAttributeAltererExtension implementation="org.jetbrains.kotlin.allopen.IdeAllOpenDeclarationAttributeAltererExtension"/>
+        <classBuilderFactoryInterceptorExtension implementation="org.jetbrains.kotlin.noarg.NoArgClassBuilderInterceptorExtension"/>
+        <storageComponentContainerContributor implementation="org.jetbrains.kotlin.noarg.ide.IdeNoArgComponentContainerContributor"/>
+        <defaultErrorMessages implementation="org.jetbrains.kotlin.annotation.processing.diagnostic.DefaultErrorMessagesNoArg"/>
     </extensions>
 </idea-plugin>

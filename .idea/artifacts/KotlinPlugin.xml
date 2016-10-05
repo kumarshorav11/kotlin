@@ -79,6 +79,10 @@
           <element id="module-output" name="allopen-cli" />
           <element id="module-output" name="allopen-ide" />
         </element>
+        <element id="archive" name="noarg-plugin.jar">
+          <element id="module-output" name="noarg-cli" />
+          <element id="module-output" name="noarg-ide" />
+        </element>
       </element>
       <element id="directory" name="kotlinc">
         <element id="dir-copy" path="$PROJECT_DIR$/dist/kotlinc" />
