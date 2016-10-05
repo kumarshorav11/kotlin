@@ -144,4 +144,9 @@ class SimpleKotlinGradleIT : BaseGradleIT() {
                     "public final method()V")
         }
     }
+
+    @Test
+    fun testKotlinJpaPlugin() {
+
+    }
 }
