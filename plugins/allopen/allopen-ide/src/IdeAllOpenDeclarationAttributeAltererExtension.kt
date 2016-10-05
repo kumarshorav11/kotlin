@@ -40,7 +40,7 @@ class IdeAllOpenDeclarationAttributeAltererExtension(val project: Project) : Abs
         CachedValueProvider.Result.create(WeakHashMap<Module, List<String>>(), ProjectRootModificationTracker.getInstance(project))
     }
 
-    override fun getAllOpenAnnotationFqNames(modifierListOwner: KtModifierListOwner): List<String> {
+    override fun getAnnotationFqNames(modifierListOwner: KtModifierListOwner): List<String> {
         val project = modifierListOwner.project
         val projectLocation = project.presentableUrl ?: return emptyList() //TODO
 
