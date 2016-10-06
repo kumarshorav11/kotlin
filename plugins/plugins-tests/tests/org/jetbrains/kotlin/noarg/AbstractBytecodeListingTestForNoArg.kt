@@ -22,7 +22,7 @@ import org.jetbrains.kotlin.codegen.extensions.ClassBuilderInterceptorExtension
 import org.jetbrains.kotlin.extensions.StorageComponentContainerContributor
 
 abstract class AbstractBytecodeListingTestForNoArg : AbstractBytecodeListingTest() {
-    private companion object {
+    companion object {
         val NOARG_ANNOTATIONS = listOf("NoArg", "NoArg2", "test.NoArg")
     }
 
