@@ -36,9 +36,10 @@ class GradleModelPerModuleCache(val project: Project) {
         private val GRADLE_SYSTEM_ID = ProjectSystemId("GRADLE")
     }
 
-    //TODO map to Map<Map<...>.
-    private val cache: CachedValue<WeakHashMap<Module, ExternalProject>> = cachedValue(project) {
-        CachedValueProvider.Result.create(WeakHashMap<Module, ExternalProject>(), ProjectRootModificationTracker.getInstance(project))
+    private class CachedData(val externalProject: ExternalProject, val fqNames: MutableMap<String, List<String>> = mutableMapOf())
+
+    private val cache: CachedValue<WeakHashMap<Module, CachedData>> = cachedValue(project) {
+        CachedValueProvider.Result.create(WeakHashMap<Module, CachedData>(), ProjectRootModificationTracker.getInstance(project))
     }
 
     fun getAnnotationFqNames(modifierListOwner: KtModifierListOwner, taskName: String): List<String> {
@@ -49,14 +50,17 @@ class GradleModelPerModuleCache(val project: Project) {
         val module = ProjectRootManager.getInstance(project).fileIndex.getModuleForFile(virtualFile) ?: return emptyList()
         val linkedProjectPath = module.getOptionValue(ExternalSystemConstants.LINKED_PROJECT_PATH_KEY) ?: return emptyList()
 
-        val moduleExternalProject = cache.value.getOrPut(module) {
+        val cachedData = cache.value.getOrPut(module) {
             val externalProjectCache = ExternalProjectDataCache.getInstance(project) ?: return emptyList()
             val rootExternalProject = externalProjectCache.getRootExternalProject(GRADLE_SYSTEM_ID, File(projectLocation)) ?: return emptyList()
-            findProject(rootExternalProject, linkedProjectPath) ?: return emptyList()
+            val moduleExternalProject = findProject(rootExternalProject, linkedProjectPath) ?: return emptyList()
+            CachedData(moduleExternalProject)
         } ?: return emptyList()
 
-        val allOpenDataStorageTaskDescription = moduleExternalProject.tasks[taskName]?.description ?: return emptyList()
-        return allOpenDataStorageTaskDescription.substringAfter(":", missingDelimiterValue = "").trim().split(',')
+        return cachedData.fqNames.getOrPut(taskName) {
+            val allOpenDataStorageTaskDescription = cachedData.externalProject.tasks[taskName]?.description ?: ""
+            allOpenDataStorageTaskDescription.substringAfter(":", missingDelimiterValue = "").trim().split(',')
+        }
     }
 
     private fun findProject(externalProject: ExternalProject, modulePath: String): ExternalProject? {
