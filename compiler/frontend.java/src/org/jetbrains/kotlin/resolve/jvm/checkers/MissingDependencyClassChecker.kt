@@ -26,12 +26,20 @@ import org.jetbrains.kotlin.resolve.calls.checkers.isComputingDeferredType
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedCall
 import org.jetbrains.kotlin.resolve.descriptorUtil.classId
 import org.jetbrains.kotlin.resolve.jvm.diagnostics.ErrorsJvm
+import org.jetbrains.kotlin.resolve.jvm.extensions.IsAndroidProjectExtension
 import org.jetbrains.kotlin.serialization.deserialization.NotFoundClasses
 import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.utils.newLinkedHashSetWithExpectedSize
 
 class MissingDependencyClassChecker : CallChecker {
     override fun check(resolvedCall: ResolvedCall<*>, reportOn: PsiElement, context: CallCheckerContext) {
+        /*
+         * Due to KT-12402, the checker is not accurate for Android,
+         * and it should be disabled until it's fixed in the Android plugin.
+         */
+        val isAndroidProject = IsAndroidProjectExtension.getInstances(reportOn.project).firstOrNull()?.isAndroidProject() ?: false
+        if (isAndroidProject) return
+
         for (classId in collectNotFoundClasses(resolvedCall.resultingDescriptor)) {
             context.trace.report(ErrorsJvm.MISSING_DEPENDENCY_CLASS.on(reportOn, classId.asSingleFqName()))
         }

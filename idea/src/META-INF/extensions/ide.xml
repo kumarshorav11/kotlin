@@ -6,6 +6,10 @@
         <extensionPoint name="declarationAttributeAltererExtension"
                         interface="org.jetbrains.kotlin.extensions.DeclarationAttributeAltererExtension"
                         area="IDEA_PROJECT"/>
+
+        <extensionPoint name="isAndroidProjectExtension"
+                        interface="org.jetbrains.kotlin.resolve.jvm.extensions.IsAndroidProjectExtension"
+                        area="IDEA_PROJECT"/>
     </extensionPoints>
 
     <extensions defaultExtensionNs="org.jetbrains.kotlin">
