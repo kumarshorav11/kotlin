@@ -19,15 +19,15 @@ package org.jetbrains.kotlin.allopen.gradle
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.internal.AbstractTask
-import org.gradle.api.internal.ConventionTask
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.compile.AbstractCompile
 import org.jetbrains.kotlin.gradle.plugin.KotlinGradleSubplugin
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 
-class AllOpenGradleSubplugin : Plugin<Project> {
+// rename to plugin
+class AllOpenGradlePlugin : Plugin<Project> {
     companion object {
-        fun isEnabled(project: Project) = project.plugins.findPlugin(AllOpenGradleSubplugin::class.java) != null
+        fun isEnabled(project: Project) = project.plugins.findPlugin(AllOpenGradlePlugin::class.java) != null
 
         fun getAllOpenExtension(project: Project): AllOpenExtension {
             return project.extensions.getByType(AllOpenExtension::class.java)
@@ -42,6 +42,7 @@ class AllOpenGradleSubplugin : Plugin<Project> {
             project.extensions.extraProperties.set("kotlinAllOpenAnnotations", fqNamesAsString)
 
             open class TaskForAllOpen : AbstractTask()
+            //idea info provider ...
             project.tasks.add(project.tasks.create("allOpenDataStorageTask", TaskForAllOpen::class.java).apply {
                 isEnabled = false
                 description = "Supported all-open annotations: " + fqNamesAsString
@@ -55,7 +56,7 @@ class AllOpenKotlinGradleSubplugin : KotlinGradleSubplugin<AbstractCompile> {
         val ANNOTATIONS_ARG_NAME = "annotations"
     }
 
-    override fun isApplicable(project: Project, task: AbstractCompile) = AllOpenGradleSubplugin.isEnabled(project)
+    override fun isApplicable(project: Project, task: AbstractCompile) = AllOpenGradlePlugin.isEnabled(project)
 
     override fun apply(
             project: Project,
@@ -64,7 +65,7 @@ class AllOpenKotlinGradleSubplugin : KotlinGradleSubplugin<AbstractCompile> {
             variantData: Any?,
             javaSourceSet: SourceSet?
     ): List<SubpluginOption> {
-        if (!AllOpenGradleSubplugin.isEnabled(project)) return emptyList()
+        if (!AllOpenGradlePlugin.isEnabled(project)) return emptyList()
 
         val allOpenExtension = project.extensions.findByType(AllOpenExtension::class.java) ?: return emptyList()
 

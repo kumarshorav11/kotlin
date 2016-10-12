@@ -21,8 +21,8 @@ import org.gradle.api.Project
 
 class SpringGradleSubplugin : Plugin<Project> {
     override fun apply(project: Project) {
-        project.plugins.apply(AllOpenGradleSubplugin::class.java)
-        val allOpenExtension = AllOpenGradleSubplugin.getAllOpenExtension(project)
+        project.plugins.apply(AllOpenGradlePlugin::class.java)
+        val allOpenExtension = AllOpenGradlePlugin.getAllOpenExtension(project)
         allOpenExtension.annotation("org.springframework.stereotype.Component")
     }
 }
