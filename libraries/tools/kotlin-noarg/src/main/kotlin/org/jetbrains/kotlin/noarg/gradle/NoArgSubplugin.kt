@@ -25,9 +25,9 @@ import org.gradle.api.tasks.compile.AbstractCompile
 import org.jetbrains.kotlin.gradle.plugin.KotlinGradleSubplugin
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 
-class NoArgGradleSubplugin : Plugin<Project> {
+class NoArgGradlePlugin : Plugin<Project> {
     companion object {
-        fun isEnabled(project: Project) = project.plugins.findPlugin(NoArgGradleSubplugin::class.java) != null
+        fun isEnabled(project: Project) = project.plugins.findPlugin(NoArgGradlePlugin::class.java) != null
 
         fun getNoArgExtension(project: Project): NoArgExtension {
             return project.extensions.getByType(NoArgExtension::class.java)
@@ -55,7 +55,7 @@ class NoArgKotlinGradleSubplugin : KotlinGradleSubplugin<AbstractCompile> {
         val ANNOTATIONS_ARG_NAME = "annotations"
     }
 
-    override fun isApplicable(project: Project, task: AbstractCompile) = NoArgGradleSubplugin.isEnabled(project)
+    override fun isApplicable(project: Project, task: AbstractCompile) = NoArgGradlePlugin.isEnabled(project)
 
     override fun apply(
             project: Project,
@@ -64,7 +64,7 @@ class NoArgKotlinGradleSubplugin : KotlinGradleSubplugin<AbstractCompile> {
             variantData: Any?,
             javaSourceSet: SourceSet?
     ): List<SubpluginOption> {
-        if (!NoArgGradleSubplugin.isEnabled(project)) return emptyList()
+        if (!NoArgGradlePlugin.isEnabled(project)) return emptyList()
 
         val noArgExtension = project.extensions.findByType(NoArgExtension::class.java) ?: return emptyList()
 

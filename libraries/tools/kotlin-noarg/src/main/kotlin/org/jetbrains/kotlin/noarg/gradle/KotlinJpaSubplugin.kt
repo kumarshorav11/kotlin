@@ -21,8 +21,8 @@ import org.gradle.api.Project
 
 class KotlinJpaSubplugin : Plugin<Project> {
     override fun apply(project: Project) {
-        project.plugins.apply(NoArgGradleSubplugin::class.java)
-        val noArgExtension = NoArgGradleSubplugin.getNoArgExtension(project)
+        project.plugins.apply(NoArgGradlePlugin::class.java)
+        val noArgExtension = NoArgGradlePlugin.getNoArgExtension(project)
         noArgExtension.annotation("javax.persistence.Entity")
     }
 }
