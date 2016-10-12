@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.idea.quickfix
 import com.intellij.codeInsight.daemon.impl.quickfix.OrderEntryFix
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixActionRegistrarImpl
 import com.intellij.codeInsight.intention.IntentionAction
+import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
@@ -26,6 +27,8 @@ import com.intellij.psi.PsiReferenceBase
 import org.jetbrains.kotlin.diagnostics.Diagnostic
 import org.jetbrains.kotlin.idea.references.KtSimpleNameReference.ShorteningMode
 import org.jetbrains.kotlin.idea.references.mainReference
+import org.jetbrains.kotlin.idea.util.application.executeWriteCommand
+import org.jetbrains.kotlin.idea.util.runWhenSmart
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtSimpleNameExpression
 import org.jetbrains.kotlin.psi.psiUtil.getQualifiedElement
@@ -49,7 +52,18 @@ object KotlinAddOrderEntryActionFactory : KotlinIntentionActionsFactory() {
             override fun getCanonicalText() = refElement.text
 
             override fun bindToElement(element: PsiElement): PsiElement {
-                return simpleExpression.mainReference.bindToElement(element, ShorteningMode.FORCED_SHORTENING)
+                fun doBind() = simpleExpression.mainReference.bindToElement(element, ShorteningMode.FORCED_SHORTENING)
+
+                val project = element.project
+                if (DumbService.isDumb(project)) {
+                    project.runWhenSmart {
+                        project.executeWriteCommand("") {
+                            doBind()
+                        }
+                    }
+                    return element
+                }
+                return doBind()
             }
         }
 
