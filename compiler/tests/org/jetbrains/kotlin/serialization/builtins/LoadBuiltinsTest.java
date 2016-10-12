@@ -115,7 +115,7 @@ public class LoadBuiltinsTest extends KotlinTestWithEnvironment {
 
         PackageFragmentProvider packageFragmentProvider = createBuiltInPackageFragmentProvider(
                 storageManager, builtInsModule, BUILT_INS_PACKAGE_FQ_NAMES,
-                new BuiltInFictitiousFunctionClassFactory(storageManager, builtInsModule),
+                Collections.singletonList(new BuiltInFictitiousFunctionClassFactory(storageManager, builtInsModule)),
                 PlatformDependentDeclarationFilter.All.INSTANCE,
                 AdditionalClassPartsProvider.None.INSTANCE,
                 new Function1<String, InputStream>() {
