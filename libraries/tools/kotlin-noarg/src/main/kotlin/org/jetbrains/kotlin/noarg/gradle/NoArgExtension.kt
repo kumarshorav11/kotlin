@@ -17,7 +17,7 @@
 package org.jetbrains.kotlin.noarg.gradle
 
 open class NoArgExtension {
-    internal val myAnnotations = mutableListOf<String>()
+    internal val myAnnotations = mutableSetOf<String>()
 
     open fun annotation(fqName: String) {
         myAnnotations.add(fqName)
