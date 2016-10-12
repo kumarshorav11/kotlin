@@ -107,7 +107,7 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
 
     public LazyClassDescriptor(
             @NotNull final LazyClassContext c,
-            @NotNull DeclarationDescriptor containingDeclaration,
+            @NotNull final DeclarationDescriptor containingDeclaration,
             @NotNull Name name,
             @NotNull final KtClassLikeInfo classLikeInfo
     ) {
@@ -150,7 +150,7 @@ public class LazyClassDescriptor extends ClassDescriptorBase implements ClassDes
                 public Modality invoke() {
                     return resolveModalityFromModifiers(classOrObject, defaultModality,
                                                         c.getTrace().getBindingContext(),
-                                                        null,
+                                                        containingDeclaration,
                                                         /* allowSealed = */ true);
                 }
             });

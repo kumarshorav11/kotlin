@@ -47,8 +47,8 @@ abstract class AbstractAllOpenDeclarationAttributeAltererExtension : Declaration
             return null
         }
 
-        val descriptor = declaration ?: containingDeclaration ?: return null
-        if (descriptor.hasSpecialAnnotation(modifierListOwner)) return Modality.OPEN
+        if (declaration?.hasSpecialAnnotation(modifierListOwner) ?: false) return Modality.OPEN
+        if (containingDeclaration?.hasSpecialAnnotation(modifierListOwner) ?: false) return Modality.OPEN
 
         return null
     }
