@@ -3445,6 +3445,12 @@ public class BlackBoxCodegenTestGenerated extends AbstractBlackBoxCodegenTest {
             doTest(fileName);
         }
 
+        @TestMetadata("underscoreParameters.kt")
+        public void testUnderscoreParameters() throws Exception {
+            String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/closures/underscoreParameters.kt");
+            doTest(fileName);
+        }
+
         @TestMetadata("compiler/testData/codegen/box/closures/captureOuterProperty")
         @TestDataPath("$PROJECT_ROOT")
         @RunWith(JUnit3RunnerWithInners.class)
@@ -5775,6 +5781,12 @@ public class BlackBoxCodegenTestGenerated extends AbstractBlackBoxCodegenTest {
             String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/destructuringDeclInLambdaParam/stdlibUsages.kt");
             doTest(fileName);
         }
+
+        @TestMetadata("underscoreNames.kt")
+        public void testUnderscoreNames() throws Exception {
+            String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/destructuringDeclInLambdaParam/underscoreNames.kt");
+            doTest(fileName);
+        }
     }
 
     @TestMetadata("compiler/testData/codegen/box/diagnostics")
@@ -7230,6 +7242,12 @@ public class BlackBoxCodegenTestGenerated extends AbstractBlackBoxCodegenTest {
             @TestMetadata("functionLiteralExpression.kt")
             public void testFunctionLiteralExpression() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/functions/functionExpression/functionLiteralExpression.kt");
+                doTest(fileName);
+            }
+
+            @TestMetadata("underscoreParameters.kt")
+            public void testUnderscoreParameters() throws Exception {
+                String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/functions/functionExpression/underscoreParameters.kt");
                 doTest(fileName);
             }
         }
@@ -9037,6 +9055,12 @@ public class BlackBoxCodegenTestGenerated extends AbstractBlackBoxCodegenTest {
             doTest(fileName);
         }
 
+        @TestMetadata("UnderscoreNames.kt")
+        public void testUnderscoreNames() throws Exception {
+            String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/multiDecl/UnderscoreNames.kt");
+            doTest(fileName);
+        }
+
         @TestMetadata("ValCapturedInFunctionLiteral.kt")
         public void testValCapturedInFunctionLiteral() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/multiDecl/ValCapturedInFunctionLiteral.kt");
@@ -9180,6 +9204,18 @@ public class BlackBoxCodegenTestGenerated extends AbstractBlackBoxCodegenTest {
             @TestMetadata("MultiDeclForValCaptured.kt")
             public void testMultiDeclForValCaptured() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/multiDecl/forRange/MultiDeclForValCaptured.kt");
+                doTest(fileName);
+            }
+
+            @TestMetadata("UnderscoreNames.kt")
+            public void testUnderscoreNames() throws Exception {
+                String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/multiDecl/forRange/UnderscoreNames.kt");
+                doTest(fileName);
+            }
+
+            @TestMetadata("UnderscoreNamesDontCallComponent.kt")
+            public void testUnderscoreNamesDontCallComponent() throws Exception {
+                String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/multiDecl/forRange/UnderscoreNamesDontCallComponent.kt");
                 doTest(fileName);
             }
 

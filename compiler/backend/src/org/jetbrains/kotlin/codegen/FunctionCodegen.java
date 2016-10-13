@@ -542,7 +542,7 @@ public class FunctionCodegen {
 
                 parameterName =
                         destructuringVariables == null
-                        ? parameter.getName().asString()
+                        ? parameter.getName().isSpecial() ? "$special_" + i : parameter.getName().getIdentifier()
                         : "$" + joinParameterNames(destructuringVariables);
             }
             else {
@@ -561,7 +561,7 @@ public class FunctionCodegen {
             List<VariableDescriptor> destructuringVariables = ValueParameterDescriptorImpl.getDestructuringVariablesOrNull(parameter);
             if (destructuringVariables == null) continue;
 
-            for (VariableDescriptor entry : destructuringVariables) {
+            for (VariableDescriptor entry : CodegenUtilKt.filterOutAnonymousDescriptors(destructuringVariables)) {
                 Type type = typeMapper.mapType(entry.getType());
                 mv.visitLocalVariable(entry.getName().asString(), type.getDescriptor(), null, methodBegin, methodEnd, shift);
                 shift += type.getSize();
@@ -573,6 +573,8 @@ public class FunctionCodegen {
         return org.jetbrains.kotlin.utils.StringsKt.join(CollectionsKt.map(variables, new Function1<VariableDescriptor, String>() {
             @Override
             public String invoke(VariableDescriptor descriptor) {
+                // stub for anonymous destructuring declaration entry
+                if (descriptor.getName().isSpecial()) return "$_$";
                 return descriptor.getName().asString();
             }
         }), "_");
