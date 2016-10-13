@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.resolve.checkers
 import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.VariableDescriptor
+import org.jetbrains.kotlin.descriptors.impl.FunctionExpressionDescriptor
 import org.jetbrains.kotlin.diagnostics.DiagnosticSink
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.psi.*
@@ -26,15 +27,17 @@ import org.jetbrains.kotlin.resolve.BindingContext
 
 object UnderscoreChecker : SimpleDeclarationChecker {
 
-    fun checkIdentifier(identifier: PsiElement?, diagnosticHolder: DiagnosticSink) {
+    @JvmOverloads
+    fun checkIdentifier(identifier: PsiElement?, diagnosticHolder: DiagnosticSink, allowOneUnderscore: Boolean = false) {
         if (identifier == null || identifier.text.isEmpty()) return
-        if (identifier.text.all { it == '_' }) {
+        if (identifier.text.all { it == '_' } && (!allowOneUnderscore || identifier.text.length != 1)) {
             diagnosticHolder.report(Errors.UNDERSCORE_IS_RESERVED.on(identifier))
         }
     }
 
-    fun checkNamed(declaration: KtNamedDeclaration, diagnosticHolder: DiagnosticSink) {
-        checkIdentifier(declaration.nameIdentifier, diagnosticHolder)
+    @JvmOverloads
+    fun checkNamed(declaration: KtNamedDeclaration, diagnosticHolder: DiagnosticSink, allowOneUnderscore: Boolean = false) {
+        checkIdentifier(declaration.nameIdentifier, diagnosticHolder, allowOneUnderscore)
     }
 
     override fun check(
@@ -44,7 +47,7 @@ object UnderscoreChecker : SimpleDeclarationChecker {
             bindingContext: BindingContext
     ) {
         if (declaration is KtProperty && descriptor !is VariableDescriptor) return
-        if (declaration is KtCallableDeclaration) {
+        if (declaration is KtCallableDeclaration && descriptor !is FunctionExpressionDescriptor) {
             for (parameter in declaration.valueParameters) {
                 checkNamed(parameter, diagnosticHolder)
             }

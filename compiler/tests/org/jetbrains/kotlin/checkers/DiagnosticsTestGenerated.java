@@ -5302,6 +5302,12 @@ public class DiagnosticsTestGenerated extends AbstractDiagnosticsTest {
                     String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/declarationChecks/destructuringDeclarations/SingleDeclForLoop.kt");
                     doTest(fileName);
                 }
+
+                @TestMetadata("underscore.kt")
+                public void testUnderscore() throws Exception {
+                    String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/declarationChecks/destructuringDeclarations/underscore.kt");
+                    doTest(fileName);
+                }
             }
 
             @TestMetadata("compiler/testData/diagnostics/tests/declarationChecks/finiteBoundRestriction")
@@ -7656,6 +7662,12 @@ public class DiagnosticsTestGenerated extends AbstractDiagnosticsTest {
                 doTest(fileName);
             }
 
+            @TestMetadata("underscopeParameters.kt")
+            public void testUnderscopeParameters() throws Exception {
+                String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/functionLiterals/underscopeParameters.kt");
+                doTest(fileName);
+            }
+
             @TestMetadata("unusedLiteral.kt")
             public void testUnusedLiteral() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/functionLiterals/unusedLiteral.kt");
@@ -7715,6 +7727,12 @@ public class DiagnosticsTestGenerated extends AbstractDiagnosticsTest {
                 @TestMetadata("simple.kt")
                 public void testSimple() throws Exception {
                     String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/functionLiterals/destructuringInLambdas/simple.kt");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("underscore.kt")
+                public void testUnderscore() throws Exception {
+                    String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/functionLiterals/destructuringInLambdas/underscore.kt");
                     doTest(fileName);
                 }
 
