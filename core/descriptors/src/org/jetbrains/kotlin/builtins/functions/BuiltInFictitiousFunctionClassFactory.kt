@@ -83,4 +83,10 @@ class BuiltInFictitiousFunctionClassFactory(
 
         return FunctionClassDescriptor(storageManager, containingPackageFragment, kind, arity)
     }
+
+    // We don't want to return 256 classes here since it would cause them to appear in every import list of every file
+    // and likely slow down compilation very much
+    override fun getContributedClasses(packageFqName: FqName): Collection<ClassDescriptor> {
+        return emptySet()
+    }
 }
