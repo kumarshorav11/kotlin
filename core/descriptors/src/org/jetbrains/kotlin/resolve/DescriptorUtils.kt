@@ -26,10 +26,12 @@ import org.jetbrains.kotlin.incremental.components.LookupLocation
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.FqNameUnsafe
-import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.DescriptorUtils
 import org.jetbrains.kotlin.resolve.constants.EnumValue
-import org.jetbrains.kotlin.types.*
+import org.jetbrains.kotlin.types.KotlinType
+import org.jetbrains.kotlin.types.TypeProjection
+import org.jetbrains.kotlin.types.TypeSubstitutor
+import org.jetbrains.kotlin.types.Variance
 import org.jetbrains.kotlin.types.checker.KotlinTypeChecker
 import org.jetbrains.kotlin.types.typeUtil.isAnyOrNullableAny
 import org.jetbrains.kotlin.types.typeUtil.makeNullable
@@ -65,16 +67,13 @@ fun ModuleDescriptor.resolveTopLevelClass(topLevelClassFqName: FqName, location:
     return getPackage(topLevelClassFqName.parent()).memberScope.getContributedClassifier(topLevelClassFqName.shortName(), location) as? ClassDescriptor
 }
 
-val ClassDescriptor.classId: ClassId
-    get() {
-        val owner = containingDeclaration
-        if (owner is PackageFragmentDescriptor) {
-            return ClassId(owner.fqName, name)
+val ClassDescriptor.classId: ClassId?
+    get() = containingDeclaration.let { owner ->
+        when (owner) {
+            is PackageFragmentDescriptor -> ClassId(owner.fqName, name)
+            is ClassDescriptor -> owner.classId?.createNestedClassId(name)
+            else -> null
         }
-        else if (owner is ClassDescriptor) {
-            return owner.classId.createNestedClassId(name)
-        }
-        throw IllegalStateException("Illegal container: $owner")
     }
 
 val ClassDescriptor.hasCompanionObject: Boolean get() = companionObjectDescriptor != null
