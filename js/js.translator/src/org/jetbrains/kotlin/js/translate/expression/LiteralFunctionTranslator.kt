@@ -22,7 +22,6 @@ import org.jetbrains.kotlin.descriptors.CallableDescriptor
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor
 import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.js.inline.util.getInnerFunction
-import org.jetbrains.kotlin.js.inline.util.refreshLabelNames
 import org.jetbrains.kotlin.js.translate.context.TranslationContext
 import org.jetbrains.kotlin.js.translate.context.getNameForCapturedDescriptor
 import org.jetbrains.kotlin.js.translate.context.hasCapturedExceptContaining
@@ -66,20 +65,19 @@ class LiteralFunctionTranslator(context: TranslationContext) : AbstractTranslato
             if (!isRecursive) {
                 lambda.name = null
             }
+            lambdaCreator.name.staticRef = lambdaCreator
             return lambdaCreator.withCapturedParameters(functionContext, invokingContext)
         }
 
         lambda.isLocal = true
 
         context().addDeclarationStatement(lambda.makeStmt())
+        lambda.name.staticRef = lambda
         return lambda.name.makeRef().apply { sideEffects = SideEffectKind.PURE }
     }
 }
 
-fun JsFunction.withCapturedParameters(
-        context: TranslationContext,
-        invokingContext: TranslationContext
-): JsExpression {
+fun JsFunction.withCapturedParameters(context: TranslationContext, invokingContext: TranslationContext): JsExpression {
     context.addDeclarationStatement(makeStmt())
     val ref = name.makeRef().apply { sideEffects = SideEffectKind.PURE }
     val invocation = JsInvocation(ref).apply { sideEffects = SideEffectKind.PURE }
