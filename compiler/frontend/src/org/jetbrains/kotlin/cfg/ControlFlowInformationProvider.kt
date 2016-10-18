@@ -606,35 +606,7 @@ class ControlFlowInformationProvider private constructor(
                 report(Errors.UNUSED_VARIABLE.on(element, variableDescriptor), ctxt)
             }
             else if (element is KtParameter) {
-                val owner = element.parent?.parent
-                if (element.isOneUnderscore) return
-                when (owner) {
-                    is KtPrimaryConstructor -> if (!element.hasValOrVar()) {
-                        val containingClass = owner.getContainingClassOrObject()
-                        val containingClassDescriptor = trace.get(
-                                BindingContext.DECLARATION_TO_DESCRIPTOR, containingClass)
-                        if (!DescriptorUtils.isAnnotationClass(containingClassDescriptor)) {
-                            report(Errors.UNUSED_PARAMETER.on(element, variableDescriptor), ctxt)
-                        }
-                    }
-                    is KtFunction -> {
-                        val mainFunctionDetector = MainFunctionDetector(trace.bindingContext)
-                        val isMain = owner is KtNamedFunction && mainFunctionDetector.isMain(owner)
-                        val functionDescriptor =
-                                trace.get(BindingContext.DECLARATION_TO_DESCRIPTOR, owner) as? FunctionDescriptor
-                                ?: throw AssertionError(owner.text)
-                        val functionName = functionDescriptor.name.asString()
-                        if (isMain
-                            || functionDescriptor.isOverridableOrOverrides
-                            || owner.hasModifier(KtTokens.OVERRIDE_KEYWORD)
-                            || "getValue" == functionName
-                            || "setValue" == functionName
-                            || "propertyDelegated" == functionName) {
-                            return
-                        }
-                        report(Errors.UNUSED_PARAMETER.on(element, variableDescriptor), ctxt)
-                    }
-                }
+                processUnusedParameter(ctxt, element, variableDescriptor)
             }
         }
         else if (variableUseState === org.jetbrains.kotlin.cfg.VariableUseState.ONLY_WRITTEN_NEVER_READ && KtPsiUtil.isRemovableVariableDeclaration(element)) {
@@ -648,6 +620,38 @@ class ControlFlowInformationProvider private constructor(
                     }
                 is KtDestructuringDeclarationEntry ->
                     report(VARIABLE_WITH_REDUNDANT_INITIALIZER.on(element, variableDescriptor), ctxt)
+            }
+        }
+    }
+
+    private fun processUnusedParameter(ctxt: VariableUseContext, element: KtParameter, variableDescriptor: VariableDescriptor) {
+        val owner = element.parent?.parent
+        if (element.isOneUnderscore) return
+        when (owner) {
+            is KtPrimaryConstructor -> if (!element.hasValOrVar()) {
+                val containingClass = owner.getContainingClassOrObject()
+                val containingClassDescriptor = trace.get(
+                        DECLARATION_TO_DESCRIPTOR, containingClass)
+                if (!DescriptorUtils.isAnnotationClass(containingClassDescriptor)) {
+                    report(UNUSED_PARAMETER.on(element, variableDescriptor), ctxt)
+                }
+            }
+            is KtFunction -> {
+                val mainFunctionDetector = MainFunctionDetector(trace.bindingContext)
+                val isMain = owner is KtNamedFunction && mainFunctionDetector.isMain(owner)
+                val functionDescriptor =
+                        trace.get(DECLARATION_TO_DESCRIPTOR, owner) as? FunctionDescriptor
+                        ?: throw AssertionError(owner.text)
+                val functionName = functionDescriptor.name.asString()
+                if (isMain
+                    || functionDescriptor.isOverridableOrOverrides
+                    || owner.hasModifier(KtTokens.OVERRIDE_KEYWORD)
+                    || "getValue" == functionName
+                    || "setValue" == functionName
+                    || "propertyDelegated" == functionName) {
+                    return
+                }
+                report(UNUSED_PARAMETER.on(element, variableDescriptor), ctxt)
             }
         }
     }
