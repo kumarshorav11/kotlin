@@ -602,11 +602,18 @@ class ControlFlowInformationProvider private constructor(
     ) {
         element.nameIdentifier ?: return
         if (!VariableUseState.isUsed(variableUseState)) {
-            if (!element.isOneUnderscore && KtPsiUtil.isRemovableVariableDeclaration(element)) {
-                report(Errors.UNUSED_VARIABLE.on(element, variableDescriptor), ctxt)
-            }
-            else if (element is KtParameter) {
-                processUnusedParameter(ctxt, element, variableDescriptor)
+            if (element.isOneUnderscore) return
+            when {
+                element is KtDestructuringDeclarationEntry && element.parent.parent is KtParameter &&
+                    // KtDestructuringDeclarationEntry -> KtDestructuringDeclaration -> KtParameter -> KtParameterList
+                    element.parent.parent.parent is KtParameterList ->
+                    report(Errors.UNUSED_DESTRUCTURED_PARAMETER_ENTRY.on(element, variableDescriptor), ctxt)
+
+                KtPsiUtil.isRemovableVariableDeclaration(element) ->
+                    report(Errors.UNUSED_VARIABLE.on(element, variableDescriptor), ctxt)
+
+                element is KtParameter ->
+                    processUnusedParameter(ctxt, element, variableDescriptor)
             }
         }
         else if (variableUseState === org.jetbrains.kotlin.cfg.VariableUseState.ONLY_WRITTEN_NEVER_READ && KtPsiUtil.isRemovableVariableDeclaration(element)) {
@@ -626,7 +633,6 @@ class ControlFlowInformationProvider private constructor(
 
     private fun processUnusedParameter(ctxt: VariableUseContext, element: KtParameter, variableDescriptor: VariableDescriptor) {
         val owner = element.parent?.parent
-        if (element.isOneUnderscore) return
         when (owner) {
             is KtPrimaryConstructor -> if (!element.hasValOrVar()) {
                 val containingClass = owner.getContainingClassOrObject()
