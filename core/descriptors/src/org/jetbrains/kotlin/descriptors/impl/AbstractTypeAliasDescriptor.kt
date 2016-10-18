@@ -50,15 +50,15 @@ abstract class AbstractTypeAliasDescriptor(
     override fun getDeclaredTypeParameters(): List<TypeParameterDescriptor> =
             declaredTypeParametersImpl
 
+    override fun getDefaultType(): SimpleType =
+            expandedType
+
     override val classDescriptor: ClassDescriptor?
         get() = if (expandedType.isError) null else expandedType.constructor.declarationDescriptor as? ClassDescriptor
 
     override fun getModality() = Modality.FINAL
 
     override fun getVisibility() = visibilityImpl
-
-    override fun getDefaultType(): SimpleType =
-            TODO("typealias getDefaultType")
 
     override fun getTypeConstructor(): TypeConstructor =
             typeConstructor
