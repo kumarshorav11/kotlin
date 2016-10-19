@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.codegen.state.KotlinTypeMapper
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.ClassifierDescriptorWithTypeParameters
 import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor
+import org.jetbrains.kotlin.descriptors.TypeAliasDescriptor
 import org.jetbrains.kotlin.load.kotlin.JvmNameResolver
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
@@ -117,6 +118,10 @@ class JvmStringTable(private val typeMapper: KotlinTypeMapper) : StringTable {
                 is ClassDescriptor -> container.classId.createNestedClassId(name)
                 is PackageFragmentDescriptor -> ClassId(container.fqName, name)
                 else -> {
+                    if (this is TypeAliasDescriptor) {
+                        // Local type alias, it's ok to lose it here.
+                        return classDescriptor!!.classId
+                    }
                     val fqName = FqName(typeMapper.mapClass(this).internalName.replace('/', '.'))
                     ClassId(fqName.parent(), FqName.topLevel(fqName.shortName()), /* isLocal = */ true)
                 }
