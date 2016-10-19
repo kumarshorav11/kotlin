@@ -57,6 +57,11 @@ public class ForTestCompileRuntime {
     }
 
     @NotNull
+    public static File[] runtimeClassesForTests() {
+        return new File[] { assertExists(new File("dist/classes/builtins")), assertExists(new File("dist/classes/stdlib")) };
+    }
+
+    @NotNull
     private static File assertExists(@NotNull File file) {
         if (!file.exists()) {
             throw new IllegalStateException(file + " does not exist. Run 'ant dist'");
