@@ -128,11 +128,11 @@
         return type === "string" ||
                type === "boolean" ||
                Kotlin.isNumber(value) ||
-               Kotlin.isType(value, Kotlin.Comparable);
+               Kotlin.isType(value, Kotlin.kotlin.Comparable);
     };
     
     Kotlin.isCharSequence = function (value) {
-        return typeof value === "string" || Kotlin.isType(value, CharSequence);
+        return typeof value === "string" || Kotlin.isType(value, Kotlin.kotlin.CharSequence);
     };
 
     Kotlin.charInc = function (value) {
@@ -444,5 +444,7 @@
         }
         return obj1;
     };
+
+    Kotlin.identityHashCode = getObjectHashCode;
 })(Kotlin);
 
